@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TokenDance</title>
+    <link rel="icon" href="https://tokendance.ai/favicon.ico" type="image/x-icon">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans', sans-serif;
+            background: #000;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .matrix-column {
+            position: absolute;
+            top: -100px;
+            color: #00ff00;
+            font-size: 14px;
+            line-height: 1.2;
+            white-space: pre;
+            animation: matrixFall linear infinite;
+            opacity: 0.8;
+            font-family: 'Courier New', monospace;
+        }
+
+        @keyframes matrixFall {
+            0% {
+                transform: translateY(-100vh);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        .content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ff00, #00ffff, #ff0080, #ffff00, #00ff00);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            letter-spacing: -0.05em;
+            animation: gradientShift 4s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        .char {
+            display: inline-block;
+            transition: transform 0.2s ease;
+            position: relative;
+            background: inherit;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0;
+            padding: 0;
+        }
+
+        .logo:hover .char {
+            animation: none;
+        }
+
+        .logo:not(:hover) .char {
+            background: inherit;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: none;
+        }
+
+        .char.bounce {
+            animation: charBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+            transform-origin: center bottom;
+            z-index: 10;
+            filter: drop-shadow(0 0 8px #00ff00) drop-shadow(0 0 15px #00ffff);
+            -webkit-text-fill-color: #00ff00 !important;
+            background: none !important;
+        }
+
+        .separator {
+            font-size: 1rem;
+            color: #006600;
+            letter-spacing: 3px;
+            margin: 1.5rem 0;
+            position: relative;
+            opacity: 0.8;
+            font-family: 'Courier New', monospace;
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(to right, transparent, #006600, transparent);
+            box-shadow: 0 0 5px #006600;
+        }
+
+        .separator::before {
+            right: 100%;
+            margin-right: 20px;
+        }
+
+        .separator::after {
+            left: 100%;
+            margin-left: 20px;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: #00dd00;
+            text-shadow: 0 0 5px #00dd00;
+            letter-spacing: 1px;
+            animation: fadeInOut 3s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0% {
+                background-position: 0% 50%;
+            }
+            25% {
+                background-position: 100% 50%;
+            }
+            50% {
+                background-position: 100% 100%;
+            }
+            75% {
+                background-position: 0% 100%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes charBounce {
+            0% {
+                transform: translateY(0) scale(1);
+            }
+            15% {
+                transform: translateY(-30px) scale(1.1);
+            }
+            30% {
+                transform: translateY(-5px) scale(1.05);
+            }
+            45% {
+                transform: translateY(-15px) scale(1.08);
+            }
+            60% {
+                transform: translateY(-2px) scale(1.02);
+            }
+            75% {
+                transform: translateY(-8px) scale(1.04);
+            }
+            90% {
+                transform: translateY(-1px) scale(1.01);
+            }
+            100% {
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.3), 0 0 30px rgba(255, 0, 128, 0.3);
+            }
+            to {
+                text-shadow: 0 0 15px rgba(0, 255, 0, 0.8), 0 0 25px rgba(0, 255, 255, 0.5), 0 0 35px rgba(255, 0, 128, 0.5), 0 0 45px rgba(255, 255, 0, 0.3);
+            }
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% {
+                opacity: 0.7;
+            }
+            50% {
+                opacity: 1;
+            }
+        }
+
+        .nav {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 20;
+        }
+
+        .nav-item {
+            display: inline-block;
+            margin-left: 30px;
+            color: #00cc00;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            padding: 8px 16px;
+        }
+
+        .nav-item:hover {
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #006600;
+            font-size: 0.9rem;
+            z-index: 20;
+        }
+
+        .footer-link {
+            color: #006600;
+            text-decoration: none;
+        }
+
+        .matrix-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                45deg,
+                rgba(0, 0, 0, 0.8) 0%,
+                rgba(0, 50, 0, 0.3) 50%,
+                rgba(0, 0, 0, 0.8) 100%
+            );
+            z-index: 5;
+        }
+
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+
+            .tagline {
+                font-size: 1.2rem;
+            }
+
+            .nav {
+                top: 20px;
+                right: 20px;
+            }
+
+            .nav-item {
+                margin-left: 15px;
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg" id="matrixBg"></div>
+    <div class="matrix-overlay"></div>
+
+    <!-- <nav class="nav">
+        <a href="#" class="nav-item">Home</a>
+        <a href="#" class="nav-item">About</a>
+        <a href="#" class="nav-item">Services</a>
+        <a href="#" class="nav-item">Contact</a>
+    </nav> -->
+
+    <div class="content">
+        <h1 class="logo" id="logo">
+            <span class="char">T</span>
+            <span class="char">o</span>
+            <span class="char">k</span>
+            <span class="char">e</span>
+            <span class="char">n</span>
+            <span class="char">D</span>
+            <span class="char">a</span>
+            <span class="char">n</span>
+            <span class="char">c</span>
+            <span class="char">e</span>
+        </h1>
+        <div class="separator">01000001 01000111 01001001</div>
+        <p class="tagline">Create & Connect</p>
+    </div>
+
+    <footer class="footer">
+        <p>&copy; 2025 <a class="footer-link" href="https://tokendance.ai" target="_blank">TokenDance</a>. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Matrix animation
+        const matrixBg = document.getElementById('matrixBg');
+        const binaryString = '01000001 01000111 01001001';
+        const columns = Math.floor(window.innerWidth / 20);
+
+        function createMatrixColumn() {
+            const column = document.createElement('div');
+            column.className = 'matrix-column';
+
+            // Generate vertical binary characters from the pattern
+            let text = '';
+            const length = Math.floor(Math.random() * 50) + 20;
+            for (let i = 0; i < length; i++) {
+                // Pick random character from the binary string (excluding spaces)
+                const charIndex = Math.floor(Math.random() * binaryString.replace(/ /g, '').length);
+                text += binaryString.replace(/ /g, '')[charIndex] + '\n';
+            }
+
+            column.textContent = text;
+            column.style.left = Math.random() * window.innerWidth + 'px';
+            column.style.animationDuration = (Math.random() * 8 + 6) + 's';
+            column.style.fontSize = (Math.random() * 4 + 12) + 'px';
+            column.style.opacity = Math.random() * 0.5 + 0.3;
+
+            matrixBg.appendChild(column);
+
+            // Remove column after animation
+            setTimeout(() => {
+                if (column.parentNode) {
+                    column.parentNode.removeChild(column);
+                }
+            }, 14000);
+        }
+
+        // Create initial columns
+        for (let i = 0; i < columns; i++) {
+            setTimeout(() => createMatrixColumn(), Math.random() * 2000);
+        }
+
+        // Continuously create new columns
+        setInterval(createMatrixColumn, 400);
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            // Clear existing columns and recreate based on new window size
+            const existingColumns = document.querySelectorAll('.matrix-column');
+            existingColumns.forEach(col => col.remove());
+
+            const newColumns = Math.floor(window.innerWidth / 20);
+            for (let i = 0; i < newColumns; i++) {
+                setTimeout(() => createMatrixColumn(), Math.random() * 1000);
+            }
+        });
+
+        // Logo character bounce effect
+        const logo = document.getElementById('logo');
+        const chars = logo.querySelectorAll('.char');
+        let bounceInterval;
+        let isHovering = false;
+
+        function startCharBounce() {
+            if (bounceInterval) return;
+
+            let currentIndex = 0;
+            let direction = 1; // 1 for left to right, -1 for right to left
+
+            bounceInterval = setInterval(() => {
+                // Remove previous bounce class
+                chars.forEach(char => char.classList.remove('bounce'));
+
+                // Add bounce class to current character
+                if (chars[currentIndex]) {
+                    chars[currentIndex].classList.add('bounce');
+                }
+
+                // Move to next character
+                currentIndex += direction;
+
+                // Change direction when reaching ends
+                if (currentIndex >= chars.length) {
+                    currentIndex = chars.length - 2;
+                    direction = -1;
+                } else if (currentIndex < 0) {
+                    currentIndex = 1;
+                    direction = 1;
+                }
+            }, 360);
+        }
+
+        function stopCharBounce() {
+            if (bounceInterval) {
+                clearInterval(bounceInterval);
+                bounceInterval = null;
+                chars.forEach(char => {
+                    char.classList.remove('bounce');
+                    // 确保恢复正常的渐变显示
+                    char.style.removeProperty('-webkit-text-fill-color');
+                    char.style.removeProperty('background');
+                    char.style.removeProperty('filter');
+                });
+            }
+        }
+
+        logo.addEventListener('mouseenter', () => {
+            isHovering = true;
+            startCharBounce();
+        });
+
+        logo.addEventListener('mouseleave', () => {
+            isHovering = false;
+            stopCharBounce();
+        });
+
+        // Add some interactive effects
+        const binaryTrail = '01000001 01000111 01001001';
+        let trailIndex = 0;
+        let lastMouseTime = 0;
+
+        document.addEventListener('mousemove', (e) => {
+            const currentTime = Date.now();
+
+            // Only create trail if mouse is moving fast enough
+            if (currentTime - lastMouseTime > 30) {
+                const char = binaryTrail[trailIndex % binaryTrail.length];
+
+                // Skip spaces for visual clarity
+                if (char !== ' ') {
+                    const cursor = document.createElement('div');
+                    cursor.style.position = 'fixed';
+                    cursor.style.left = e.clientX + 'px';
+                    cursor.style.top = e.clientY + 'px';
+                    cursor.style.color = '#00ff00';
+                    cursor.style.fontSize = '14px';
+                    cursor.style.fontFamily = 'Courier New, monospace';
+                    cursor.style.pointerEvents = 'none';
+                    cursor.style.zIndex = '15';
+                    cursor.style.textShadow = '0 0 5px #00ff00';
+                    cursor.style.userSelect = 'none';
+                    cursor.textContent = char;
+
+                    document.body.appendChild(cursor);
+
+                    setTimeout(() => {
+                        cursor.style.opacity = '0';
+                        cursor.style.transform = 'scale(1.5)';
+                        cursor.style.transition = 'all 1s ease';
+                        setTimeout(() => {
+                            if (cursor.parentNode) {
+                                cursor.parentNode.removeChild(cursor);
+                            }
+                        }, 1000);
+                    }, 100);
+                }
+
+                trailIndex++;
+                lastMouseTime = currentTime;
+            }
+        });
+    </script>
+</body>
+</html>
