@@ -21,11 +21,15 @@
             box-sizing: border-box;
         }
 
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
         body {
             font-family: 'Noto Sans', sans-serif;
             background: #000;
-            overflow: hidden;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         .matrix-bg {
@@ -67,12 +71,14 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            width: 100%;
+            padding: 20px;
             text-align: center;
         }
 
         .logo {
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 8vw, 4rem);
             font-weight: bold;
             background: linear-gradient(45deg, #00ff00, #00ffff, #ff0080, #ffff00, #00ff00);
             background-size: 400% 400%;
@@ -83,6 +89,9 @@
             letter-spacing: -0.05em;
             animation: gradientShift 4s ease-in-out infinite;
             cursor: pointer;
+            width: 100%;
+            max-width: 800px;
+            text-align: center;
         }
 
         .char {
@@ -120,41 +129,32 @@
 
         .separator {
             font-size: 1rem;
-            color: #006600;
-            letter-spacing: 3px;
-            margin: 1.5rem 0;
+            color: #008844;
+            letter-spacing: 5px;
+            margin: 2rem 0;
             position: relative;
-            opacity: 0.8;
+            opacity: 0.6;
             font-family: 'Courier New', monospace;
+            text-transform: uppercase;
         }
 
         .separator::before,
         .separator::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 100px;
-            height: 1px;
-            background: linear-gradient(to right, transparent, #006600, transparent);
-            box-shadow: 0 0 5px #006600;
-        }
-
-        .separator::before {
-            right: 100%;
-            margin-right: 20px;
-        }
-
-        .separator::after {
-            left: 100%;
-            margin-left: 20px;
+            display: none;
         }
 
         .tagline {
-            font-size: 1.5rem;
-            color: #00dd00;
-            text-shadow: 0 0 5px #00dd00;
-            letter-spacing: 1px;
-            animation: fadeInOut 3s ease-in-out infinite;
+            font-family: 'Courier New', monospace;
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            color: #00ff99;
+            letter-spacing: 3px;
+            animation: pulse 4s ease-in-out infinite;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+            width: 100%;
+            text-shadow: none;
+            filter: drop-shadow(0 0 5px #00ff99);
         }
 
         @keyframes gradientShift {
@@ -220,22 +220,40 @@
             }
         }
 
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.8;
+                filter: drop-shadow(0 0 5px #00ff99);
+            }
+            50% {
+                transform: scale(1.02);
+                opacity: 1;
+                filter: drop-shadow(0 0 12px #00ff99);
+            }
+        }
+
         .nav {
-            position: absolute;
-            top: 30px;
-            right: 30px;
+            position: fixed;
+            top: 20px;
+            right: 20px;
             z-index: 20;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 10px;
         }
 
         .nav-item {
             display: inline-block;
-            margin-left: 30px;
             color: #00cc00;
             text-decoration: none;
-            font-size: 1rem;
+            font-size: clamp(0.875rem, 2vw, 1rem);
             transition: all 0.3s ease;
             border: 1px solid transparent;
             padding: 8px 16px;
+            white-space: nowrap;
         }
 
         .nav-item:hover {
@@ -246,17 +264,21 @@
         }
 
         .footer {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #006600;
-            font-size: 0.9rem;
-            z-index: 20;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            padding: 20px;
+            text-align: center;
+            color: #00cc00;
+            font-size: clamp(0.75rem, 2vw, 0.875rem);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
         .footer-link {
-            color: #006600;
+            color: #00ff00;
             text-decoration: none;
         }
 
@@ -276,23 +298,49 @@
         }
 
         @media (max-width: 768px) {
-            .logo {
-                font-size: 2.5rem;
-            }
-
-            .tagline {
-                font-size: 1.2rem;
-            }
-
             .nav {
-                top: 20px;
-                right: 20px;
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                flex-direction: column;
+                align-items: flex-end;
             }
 
             .nav-item {
-                margin-left: 15px;
-                font-size: 0.9rem;
+                margin-left: 0;
+                margin-bottom: 5px;
+                text-align: center;
+            }
+
+            .separator::before,
+            .separator::after {
+                width: 50px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 2.5rem;
+                text-align: center;
+                margin: 0 auto;
+            }
+
+            .tagline {
+                font-size: 1rem;
+                text-align: center;
+                margin: 0 auto;
+            }
+
+            .nav {
+                position: fixed;
+                top: 5px;
+                right: 5px;
+            }
+
+            .nav-item {
                 padding: 6px 12px;
+                font-size: 0.875rem;
+                text-align: center;
             }
         }
     </style>
@@ -488,6 +536,18 @@
                 lastMouseTime = currentTime;
             }
         });
+
+        const sloganElement = document.querySelector('.tagline');
+        const slogans = [
+            "Create & Connect",
+            "构建 & 连接",
+            "창조 & 연결",
+            "Créer & Connecter",
+            "Создать & Подключить",
+            "作成 & 接続",
+            "Erstellen & Verbinden",
+            "Crear & Conectar"
+        ];
     </script>
 </body>
 </html>
