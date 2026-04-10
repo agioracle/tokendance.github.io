@@ -29,8 +29,26 @@
     <meta name="googlebot" content="index, follow">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Sans+JP:wght@300;400&family=Noto+Sans+KR:wght@300;400&display=swap" rel="stylesheet">
     <style>
+        /*
+         * TokenDance — Refined Tech Minimalism
+         * 4-color high-saturation palette:
+         *   Vivid Blue    #0D52D6
+         *   Electric Blue  #1B8AE8
+         *   Bright Teal    #00AACC
+         *   Vivid Cyan     #00C4A0
+         */
+
+        :root {
+            --c1: #0D52D6;
+            --c2: #1B8AE8;
+            --c3: #00AACC;
+            --c4: #00C4A0;
+            --bg: #FAFBFD;
+            --text-muted: rgba(13, 82, 214, 0.35);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -43,43 +61,156 @@
         }
 
         body {
-            font-family: 'Noto Sans', sans-serif;
-            background: #000;
+            font-family: 'Outfit', 'Noto Sans SC', sans-serif;
+            background: var(--bg);
             min-height: 100vh;
+            /* Subtle dot grid texture */
+            background-image:
+                radial-gradient(circle, rgba(13, 82, 214, 0.035) 1px, transparent 1px);
+            background-size: 32px 32px;
         }
 
-        .matrix-bg {
+        /* ── Ambient Glow Orbs ── */
+        .ambient-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0;
+            animation: orbFloat 18s ease-in-out infinite;
+        }
+
+        .glow-orb:nth-child(1) {
+            width: 500px;
+            height: 500px;
+            background: var(--c1);
+            top: -10%;
+            left: -5%;
+            opacity: 0.04;
+            animation-delay: 0s;
+            animation-duration: 22s;
+        }
+
+        .glow-orb:nth-child(2) {
+            width: 400px;
+            height: 400px;
+            background: var(--c3);
+            bottom: -8%;
+            right: -3%;
+            opacity: 0.035;
+            animation-delay: -6s;
+            animation-duration: 18s;
+        }
+
+        .glow-orb:nth-child(3) {
+            width: 350px;
+            height: 350px;
+            background: var(--c4);
+            top: 40%;
+            right: 20%;
+            opacity: 0.025;
+            animation-delay: -12s;
+            animation-duration: 25s;
+        }
+
+        @keyframes orbFloat {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 0.03;
+            }
+            33% {
+                transform: translate(40px, -30px) scale(1.1);
+                opacity: 0.055;
+            }
+            66% {
+                transform: translate(-20px, 20px) scale(0.95);
+                opacity: 0.035;
+            }
+        }
+
+        /* ── Token Rain Background ── */
+        .token-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 1;
+            overflow: hidden;
         }
 
-        .matrix-column {
+        .token-column {
             position: absolute;
-            top: -100px;
-            color: #00ff00;
-            font-size: 14px;
-            line-height: 1.2;
+            top: -120px;
+            font-size: 15px;
+            line-height: 1.6;
             white-space: pre;
-            animation: matrixFall linear infinite;
-            opacity: 0.8;
-            font-family: 'Courier New', monospace;
+            animation: tokenFall linear infinite;
+            font-family: 'Noto Sans SC', 'Noto Sans JP', 'Noto Sans KR', 'Outfit', sans-serif;
+            font-weight: 300;
+            letter-spacing: 0.04em;
+            pointer-events: none;
+            will-change: transform;
         }
 
-        @keyframes matrixFall {
+        /* Depth layers for token rain */
+        .token-column.depth-far {
+            filter: blur(0.5px);
+            opacity: 0.18 !important;
+            font-size: 12px !important;
+        }
+
+        .token-column.depth-mid {
+            filter: blur(0px);
+            opacity: 0.28 !important;
+        }
+
+        .token-column.depth-near {
+            filter: blur(0px);
+            opacity: 0.4 !important;
+            font-size: 16px !important;
+        }
+
+        @keyframes tokenFall {
             0% {
                 transform: translateY(-100vh);
+                opacity: 0;
+            }
+            4% {
+                opacity: 1;
+            }
+            92% {
                 opacity: 1;
             }
             100% {
-                transform: translateY(100vh);
+                transform: translateY(105vh);
                 opacity: 0;
             }
         }
 
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse at 50% 50%, transparent 50%, rgba(250, 251, 253, 0.6) 90%);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* ── Main Content ── */
         .content {
             position: relative;
             z-index: 10;
@@ -93,300 +224,317 @@
             text-align: center;
         }
 
+        /* ── Logo Title ── */
         .logo {
-            font-size: clamp(2.5rem, 8vw, 4rem);
-            font-weight: bold;
-            background: linear-gradient(45deg, #00ff00, #00ffff, #ff0080, #ffff00, #00ff00);
-            background-size: 400% 400%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            letter-spacing: -0.05em;
-            animation: gradientShift 4s ease-in-out infinite;
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(3.2rem, 10vw, 6rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0;
             cursor: pointer;
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             text-align: center;
+            line-height: 1.05;
+            position: relative;
         }
 
         .char {
             display: inline-block;
-            transition: transform 0.2s ease;
-            position: relative;
-            background: inherit;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin: 0;
-            padding: 0;
+            color: var(--c1);
+            transition: color 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        text-shadow 0.3s ease;
+            opacity: 0;
+            transform: translateY(30px) scale(0.9);
+            animation: charReveal 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            /* 3D layered shadow effect */
+            text-shadow:
+                0 1px 0 rgba(0, 0, 0, 0.12),
+                0 2px 0 rgba(0, 0, 0, 0.10),
+                0 3px 0 rgba(0, 0, 0, 0.08),
+                0 4px 0 rgba(0, 0, 0, 0.06),
+                0 5px 0 rgba(0, 0, 0, 0.04),
+                0 6px 8px rgba(0, 0, 0, 0.08);
         }
 
-        .logo:hover .char {
+        .char.revealed {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0px);
             animation: none;
         }
 
-        .logo:not(:hover) .char {
-            background: inherit;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            filter: none;
+        .char:nth-child(1)  { animation-delay: 0.08s; }
+        .char:nth-child(2)  { animation-delay: 0.15s; }
+        .char:nth-child(3)  { animation-delay: 0.22s; }
+        .char:nth-child(4)  { animation-delay: 0.29s; }
+        .char:nth-child(5)  { animation-delay: 0.36s; }
+        .char:nth-child(6)  { animation-delay: 0.46s; }
+        .char:nth-child(7)  { animation-delay: 0.53s; }
+        .char:nth-child(8)  { animation-delay: 0.60s; }
+        .char:nth-child(9)  { animation-delay: 0.67s; }
+        .char:nth-child(10) { animation-delay: 0.74s; }
+
+        @keyframes charReveal {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+                filter: blur(6px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0px);
+            }
         }
 
-        .char.bounce {
-            animation: charBounce 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
-            transform-origin: center bottom;
-            z-index: 10;
-            filter: drop-shadow(0 0 8px #00ff00) drop-shadow(0 0 15px #00ffff);
-            -webkit-text-fill-color: #00ff00 !important;
-            background: none !important;
+        .char:hover {
+            transform: translateY(-4px) scale(1.05);
+            text-shadow:
+                0 2px 0 rgba(0, 0, 0, 0.12),
+                0 4px 0 rgba(0, 0, 0, 0.10),
+                0 6px 0 rgba(0, 0, 0, 0.08),
+                0 8px 0 rgba(0, 0, 0, 0.06),
+                0 10px 0 rgba(0, 0, 0, 0.04),
+                0 12px 16px rgba(0, 0, 0, 0.10);
+        }
+
+        .char.wave {
+            animation: charWave 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+            filter: drop-shadow(0 0 18px currentColor) drop-shadow(0 0 4px currentColor);
+            opacity: 1 !important;
+        }
+
+        @keyframes charWave {
+            0%   {
+                transform: translateY(0) scale(1);
+                text-shadow:
+                    0 1px 0 rgba(0, 0, 0, 0.12),
+                    0 2px 0 rgba(0, 0, 0, 0.10),
+                    0 3px 0 rgba(0, 0, 0, 0.08),
+                    0 4px 0 rgba(0, 0, 0, 0.06),
+                    0 5px 0 rgba(0, 0, 0, 0.04),
+                    0 6px 8px rgba(0, 0, 0, 0.08);
+            }
+            40%  {
+                transform: translateY(-28px) scale(1.12) rotate(-2deg);
+                text-shadow:
+                    0 4px 0 rgba(0, 0, 0, 0.10),
+                    0 8px 0 rgba(0, 0, 0, 0.08),
+                    0 12px 0 rgba(0, 0, 0, 0.06),
+                    0 16px 0 rgba(0, 0, 0, 0.04),
+                    0 20px 0 rgba(0, 0, 0, 0.02),
+                    0 28px 24px rgba(0, 0, 0, 0.12);
+            }
+            100% {
+                transform: translateY(0) scale(1) rotate(0deg);
+                text-shadow:
+                    0 1px 0 rgba(0, 0, 0, 0.12),
+                    0 2px 0 rgba(0, 0, 0, 0.10),
+                    0 3px 0 rgba(0, 0, 0, 0.08),
+                    0 4px 0 rgba(0, 0, 0, 0.06),
+                    0 5px 0 rgba(0, 0, 0, 0.04),
+                    0 6px 8px rgba(0, 0, 0, 0.08);
+            }
+        }
+
+        /* ── Separator: language token showcase ── */
+        .separator-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 2.2rem 0 1rem;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 1.5s;
+        }
+
+        .separator-line {
+            width: 40px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--c2), transparent);
+            opacity: 0.4;
         }
 
         .separator {
-            font-size: 1rem;
-            color: #008844;
-            letter-spacing: 5px;
-            margin: 2rem 0;
-            position: relative;
-            opacity: 0.6;
-            font-family: 'Courier New', monospace;
-            text-transform: uppercase;
-        }
-
-        .separator::before,
-        .separator::after {
-            display: none;
-        }
-
-        .tagline {
-            font-family: 'Courier New', monospace;
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            color: #00ff99;
+            font-size: clamp(0.85rem, 2vw, 1rem);
+            font-weight: 400;
             letter-spacing: 3px;
-            animation: pulse 4s ease-in-out infinite;
+            position: relative;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .separator-text {
+            transition: opacity 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                        transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            white-space: nowrap;
+            font-family: 'Noto Sans SC', 'Noto Sans JP', 'Noto Sans KR', 'Outfit', sans-serif;
+        }
+
+        .separator-text.color-0 { color: var(--c1); }
+        .separator-text.color-1 { color: var(--c2); }
+        .separator-text.color-2 { color: var(--c3); }
+        .separator-text.color-3 { color: var(--c4); }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ── Tagline (hidden but preserved) ── */
+        .tagline {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, var(--c2), var(--c3), var(--c4));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             max-width: 800px;
             margin: 0 auto;
             text-align: center;
             width: 100%;
-            text-shadow: none;
-            filter: drop-shadow(0 0 5px #00ff99);
         }
 
-        @keyframes gradientShift {
-            0% {
-                background-position: 0% 50%;
-            }
-            25% {
-                background-position: 100% 50%;
-            }
-            50% {
-                background-position: 100% 100%;
-            }
-            75% {
-                background-position: 0% 100%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        @keyframes charBounce {
-            0% {
-                transform: translateY(0) scale(1);
-            }
-            15% {
-                transform: translateY(-30px) scale(1.1);
-            }
-            30% {
-                transform: translateY(-5px) scale(1.05);
-            }
-            45% {
-                transform: translateY(-15px) scale(1.08);
-            }
-            60% {
-                transform: translateY(-2px) scale(1.02);
-            }
-            75% {
-                transform: translateY(-8px) scale(1.04);
-            }
-            90% {
-                transform: translateY(-1px) scale(1.01);
-            }
-            100% {
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 10px rgba(0, 255, 0, 0.5), 0 0 20px rgba(0, 255, 255, 0.3), 0 0 30px rgba(255, 0, 128, 0.3);
-            }
-            to {
-                text-shadow: 0 0 15px rgba(0, 255, 0, 0.8), 0 0 25px rgba(0, 255, 255, 0.5), 0 0 35px rgba(255, 0, 128, 0.5), 0 0 45px rgba(255, 255, 0, 0.3);
-            }
-        }
-
-        @keyframes fadeInOut {
-            0%, 100% {
-                opacity: 0.7;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 0.8;
-                filter: drop-shadow(0 0 5px #00ff99);
-            }
-            50% {
-                transform: scale(1.02);
-                opacity: 1;
-                filter: drop-shadow(0 0 12px #00ff99);
-            }
-        }
-
-        .nav {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 20;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            gap: 10px;
-            padding: 10px;
-        }
-
-        .nav-item {
-            display: inline-block;
-            color: #00cc00;
-            text-decoration: none;
-            font-size: clamp(0.875rem, 2vw, 1rem);
-            transition: all 0.3s ease;
-            border: 1px solid transparent;
-            padding: 8px 16px;
-            white-space: nowrap;
-        }
-
-        .nav-item:hover {
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            box-shadow: 0 0 10px #00ff00;
-            background: rgba(0, 255, 0, 0.1);
-        }
-
+        /* ── Footer ── */
         .footer {
             position: relative;
+            z-index: 10;
             bottom: 0;
             width: 100%;
-            padding: 20px;
+            padding: 32px 24px;
             text-align: center;
-            color: #00cc00;
-            font-size: clamp(0.75rem, 2vw, 0.875rem);
+            color: var(--text-muted);
+            font-size: clamp(0.72rem, 1.8vw, 0.82rem);
+            font-weight: 300;
+            letter-spacing: 0.04em;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 10px;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+            animation-delay: 1.9s;
         }
 
         .footer-link {
-            color: #00ff00;
+            color: var(--c2);
+            opacity: 0.5;
             text-decoration: none;
+            transition: opacity 0.3s, color 0.3s;
+            position: relative;
         }
 
-        .matrix-overlay {
-            position: fixed;
-            top: 0;
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                45deg,
-                rgba(0, 0, 0, 0.8) 0%,
-                rgba(0, 50, 0, 0.3) 50%,
-                rgba(0, 0, 0, 0.8) 100%
-            );
-            z-index: 5;
+            width: 0;
+            height: 1px;
+            background: var(--c1);
+            transition: width 0.3s ease;
         }
 
+        .footer-link:hover {
+            color: var(--c1);
+            opacity: 1;
+        }
+
+        .footer-link:hover::after {
+            width: 100%;
+        }
+
+        /* ── Mouse Trail ── */
+        .cursor-trail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 15;
+            font-family: 'Noto Sans SC', 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            user-select: none;
+        }
+
+        /* ── Responsive ── */
         @media (max-width: 768px) {
-            .nav {
-                position: fixed;
-                top: 10px;
-                right: 10px;
-                flex-direction: column;
-                align-items: flex-end;
+            .logo {
+                font-size: clamp(2.8rem, 10vw, 4.5rem);
             }
 
-            .nav-item {
-                margin-left: 0;
-                margin-bottom: 5px;
-                text-align: center;
-            }
-
-            .separator::before,
-            .separator::after {
-                width: 50px;
+            .separator-line {
+                width: 24px;
             }
         }
 
         @media (max-width: 480px) {
             .logo {
-                font-size: 2.5rem;
-                text-align: center;
-                margin: 0 auto;
+                font-size: 2.6rem;
             }
 
             .tagline {
                 font-size: 1rem;
-                text-align: center;
-                margin: 0 auto;
+                letter-spacing: 0.12em;
             }
 
-            .nav {
-                position: fixed;
-                top: 5px;
-                right: 5px;
+            .separator-line {
+                width: 16px;
             }
+        }
 
-            .nav-item {
-                padding: 6px 12px;
-                font-size: 0.875rem;
-                text-align: center;
-            }
+        /* ── Custom Scrollbar ── */
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(13, 82, 214, 0.15); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(13, 82, 214, 0.3); }
+
+        ::selection {
+            background: rgba(13, 82, 214, 0.12);
+            color: var(--c1);
+        }
+
+        /* ── Smooth scrolling ── */
+        html {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
 <body>
-    <div class="matrix-bg" id="matrixBg"></div>
-    <div class="matrix-overlay"></div>
+    <!-- Ambient floating glow orbs -->
+    <div class="ambient-glow">
+        <div class="glow-orb"></div>
+        <div class="glow-orb"></div>
+        <div class="glow-orb"></div>
+    </div>
 
-    <!-- <nav class="nav">
-        <a href="#" class="nav-item">Home</a>
-        <a href="#" class="nav-item">About</a>
-        <a href="#" class="nav-item">Services</a>
-        <a href="#" class="nav-item">Contact</a>
-    </nav> -->
+    <div class="token-bg" id="tokenBg"></div>
+    <div class="overlay"></div>
 
     <div class="content">
         <h1 class="logo" id="logo">
-            <span class="char">T</span>
-            <span class="char">o</span>
-            <span class="char">k</span>
-            <span class="char">e</span>
-            <span class="char">n</span>
-            <span class="char">D</span>
-            <span class="char">a</span>
-            <span class="char">n</span>
-            <span class="char">c</span>
-            <span class="char">e</span>
+            <span class="char">T</span><span class="char">o</span><span class="char">k</span><span class="char">e</span><span class="char">n</span><span class="char">D</span><span class="char">a</span><span class="char">n</span><span class="char">c</span><span class="char">e</span>
         </h1>
-        <div class="separator">01000001 01000111 01001001</div>
-        <p class="tagline">CREATE & CONNECT</p>
+        <div class="separator-wrapper">
+            <div class="separator-line"></div>
+            <div class="separator">
+                <span class="separator-text color-0" id="separatorText"></span>
+            </div>
+            <div class="separator-line"></div>
+        </div>
+        <!-- <p class="tagline">Create & Connect</p> -->
     </div>
 
     <footer class="footer">
@@ -394,176 +542,256 @@
     </footer>
 
     <script>
-        // Matrix animation
-        const matrixBg = document.getElementById('matrixBg');
-        const binaryString = '01000001 01000111 01001001';
-        const columns = Math.floor(window.innerWidth / 20);
+        // ═══════════════════════════════════════
+        // Palette — 4 colors only
+        // ═══════════════════════════════════════
+        const COLORS = ['#0D52D6', '#1B8AE8', '#00AACC', '#00C4A0'];
 
-        function createMatrixColumn() {
+        // ═══════════════════════════════════════
+        // Token characters: 创造 · 连接 · 进化
+        // Translated into 11 languages
+        // ═══════════════════════════════════════
+        const TOKEN_CHARS = {
+            zh: ['创', '造', '连', '接', '进', '化'],
+            en: ['create', 'make', 'connect', 'join', 'advance', 'evolve'],
+            ja: ['創', '造', '連', '接', '進', '化'],
+            ko: ['창', '조', '연', '접', '진', '화'],
+            fr: ['créer', 'faire', 'lier', 'joindre', 'avancer', 'évoluer'],
+            es: ['crear', 'hacer', 'unir', 'juntar', 'avanzar', 'evolucionar'],
+            de: ['schaffen', 'machen', 'binden', 'fügen', 'schreiten', 'wandeln'],
+            ru: ['создать', 'делать', 'связать', 'принять', 'идти', 'эволюция'],
+            ar: ['إبداع', 'صنع', 'ربط', 'وصل', 'تقدم', 'تطور'],
+            hi: ['सृजन', 'बनाना', 'जोड़', 'जुड़', 'आगे', 'विकास'],
+            pt: ['criar', 'fazer', 'ligar', 'juntar', 'avançar', 'evoluir'],
+        };
+
+        const LANG_KEYS = Object.keys(TOKEN_CHARS);
+
+        function randomLang() {
+            return LANG_KEYS[Math.floor(Math.random() * LANG_KEYS.length)];
+        }
+
+        function randomCharFromLang(lang) {
+            const chars = TOKEN_CHARS[lang];
+            return chars[Math.floor(Math.random() * chars.length)];
+        }
+
+        function randomColor() {
+            return COLORS[Math.floor(Math.random() * COLORS.length)];
+        }
+
+        // ═══════════════════════════════════════
+        // Token Rain with depth layers
+        // ═══════════════════════════════════════
+        const tokenBg = document.getElementById('tokenBg');
+        const DEPTH_CLASSES = ['depth-far', 'depth-mid', 'depth-near'];
+        const DEPTH_WEIGHTS = [0.4, 0.35, 0.25]; // More far, fewer near
+
+        function pickDepth() {
+            const r = Math.random();
+            if (r < DEPTH_WEIGHTS[0]) return DEPTH_CLASSES[0];
+            if (r < DEPTH_WEIGHTS[0] + DEPTH_WEIGHTS[1]) return DEPTH_CLASSES[1];
+            return DEPTH_CLASSES[2];
+        }
+
+        function createTokenColumn() {
             const column = document.createElement('div');
-            column.className = 'matrix-column';
+            const depth = pickDepth();
+            column.className = 'token-column ' + depth;
 
-            // Generate vertical binary characters from the pattern
+            const color = randomColor();
+            const lang = randomLang();
+
+            const length = Math.floor(Math.random() * 10) + 5;
             let text = '';
-            const length = Math.floor(Math.random() * 50) + 20;
             for (let i = 0; i < length; i++) {
-                // Pick random character from the binary string (excluding spaces)
-                const charIndex = Math.floor(Math.random() * binaryString.replace(/ /g, '').length);
-                text += binaryString.replace(/ /g, '')[charIndex] + '\n';
+                text += randomCharFromLang(lang) + '\n';
             }
 
             column.textContent = text;
             column.style.left = Math.random() * window.innerWidth + 'px';
-            column.style.animationDuration = (Math.random() * 8 + 6) + 's';
-            column.style.fontSize = (Math.random() * 4 + 12) + 'px';
-            column.style.opacity = Math.random() * 0.5 + 0.3;
+            column.style.color = color;
 
-            matrixBg.appendChild(column);
+            // Speed varies by depth — far = slower, near = faster
+            const baseSpeed = depth === 'depth-far' ? 16 : depth === 'depth-mid' ? 12 : 9;
+            const speed = (Math.random() * 6 + baseSpeed);
+            column.style.animationDuration = speed + 's';
 
-            // Remove column after animation
+            const baseFontSize = depth === 'depth-far' ? 11 : depth === 'depth-mid' ? 14 : 16;
+            column.style.fontSize = (Math.random() * 2 + baseFontSize) + 'px';
+
+            tokenBg.appendChild(column);
+
+            const duration = speed * 1000 + 500;
             setTimeout(() => {
-                if (column.parentNode) {
-                    column.parentNode.removeChild(column);
-                }
-            }, 14000);
+                if (column.parentNode) column.parentNode.removeChild(column);
+            }, duration);
         }
 
-        // Create initial columns
-        for (let i = 0; i < columns; i++) {
-            setTimeout(() => createMatrixColumn(), Math.random() * 2000);
+        // Staggered initial burst
+        const initColumns = Math.floor(window.innerWidth / 30);
+        for (let i = 0; i < initColumns; i++) {
+            setTimeout(() => createTokenColumn(), Math.random() * 4000);
         }
 
-        // Continuously create new columns
-        setInterval(createMatrixColumn, 400);
+        // Continuous creation
+        setInterval(createTokenColumn, 600);
 
-        // Handle window resize
+        // Handle resize
+        let resizeTimeout;
         window.addEventListener('resize', () => {
-            // Clear existing columns and recreate based on new window size
-            const existingColumns = document.querySelectorAll('.matrix-column');
-            existingColumns.forEach(col => col.remove());
-
-            const newColumns = Math.floor(window.innerWidth / 20);
-            for (let i = 0; i < newColumns; i++) {
-                setTimeout(() => createMatrixColumn(), Math.random() * 1000);
-            }
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                const existing = document.querySelectorAll('.token-column');
+                existing.forEach(col => col.remove());
+                const newCols = Math.floor(window.innerWidth / 30);
+                for (let i = 0; i < newCols; i++) {
+                    setTimeout(() => createTokenColumn(), Math.random() * 2000);
+                }
+            }, 200);
         });
 
-        // Logo character bounce effect
-        const logo = document.getElementById('logo');
-        const chars = logo.querySelectorAll('.char');
-        let bounceInterval;
-        let isHovering = false;
+        // ═══════════════════════════════════════
+        // Separator: rotating language tokens
+        // ═══════════════════════════════════════
+        const separatorPhrases = [
+            { text: 'create · connect · evolve', lang: 'en' },
+            { text: '创造 · 连接 · 进化', lang: 'zh' },
+            { text: '創造 · 接続 · 進化', lang: 'ja' },
+            { text: '창조 · 연결 · 진화', lang: 'ko' },
+            { text: 'créer · connecter · évoluer', lang: 'fr' },
+            { text: 'crear · conectar · evolucionar', lang: 'es' },
+            { text: 'schaffen · verbinden · entwickeln', lang: 'de' },
+            { text: 'создать · связать · эволюция', lang: 'ru' },
+            { text: 'إبداع · اتصال · تطور', lang: 'ar' },
+            { text: 'सृजन · जोड़ना · विकास', lang: 'hi' },
+            { text: 'criar · conectar · evoluir', lang: 'pt' },
+        ];
 
-        function startCharBounce() {
-            if (bounceInterval) return;
+        const separatorEl = document.getElementById('separatorText');
+        let sepIdx = 0;
+        let colorIdx = 0;
 
-            let currentIndex = 0;
-            let direction = 1; // 1 for left to right, -1 for right to left
+        function cycleSeparator() {
+            separatorEl.style.opacity = '0';
+            separatorEl.style.transform = 'translateY(8px) scale(0.98)';
 
-            bounceInterval = setInterval(() => {
-                // Remove previous bounce class
-                chars.forEach(char => char.classList.remove('bounce'));
-
-                // Add bounce class to current character
-                if (chars[currentIndex]) {
-                    chars[currentIndex].classList.add('bounce');
-                }
-
-                // Move to next character
-                currentIndex += direction;
-
-                // Change direction when reaching ends
-                if (currentIndex >= chars.length) {
-                    currentIndex = chars.length - 2;
-                    direction = -1;
-                } else if (currentIndex < 0) {
-                    currentIndex = 1;
-                    direction = 1;
-                }
-            }, 360);
+            setTimeout(() => {
+                sepIdx = (sepIdx + 1) % separatorPhrases.length;
+                colorIdx = (colorIdx + 1) % 4;
+                separatorEl.textContent = separatorPhrases[sepIdx].text;
+                separatorEl.className = 'separator-text color-' + colorIdx;
+                separatorEl.style.opacity = '1';
+                separatorEl.style.transform = 'translateY(0) scale(1)';
+            }, 500);
         }
 
-        function stopCharBounce() {
-            if (bounceInterval) {
-                clearInterval(bounceInterval);
-                bounceInterval = null;
-                chars.forEach(char => {
-                    char.classList.remove('bounce');
-                    // 确保恢复正常的渐变显示
-                    char.style.removeProperty('-webkit-text-fill-color');
-                    char.style.removeProperty('background');
-                    char.style.removeProperty('filter');
-                });
-            }
+        // Initialize first phrase
+        separatorEl.textContent = separatorPhrases[0].text;
+        separatorEl.className = 'separator-text color-0';
+        separatorEl.style.opacity = '1';
+        setInterval(cycleSeparator, 3000);
+
+        // ═══════════════════════════════════════
+        // Logo character wave effect
+        // ═══════════════════════════════════════
+        const logo = document.getElementById('logo');
+        const chars = logo.querySelectorAll('.char');
+        let waveInterval;
+        let isHovering = false;
+
+        function startWave() {
+            if (waveInterval) return;
+            let idx = 0;
+            waveInterval = setInterval(() => {
+                chars.forEach(c => c.classList.remove('wave'));
+                if (chars[idx]) chars[idx].classList.add('wave');
+                idx++;
+                if (idx >= chars.length) {
+                    clearInterval(waveInterval);
+                    waveInterval = null;
+                    if (isHovering) setTimeout(startWave, 400);
+                }
+            }, 80);
         }
 
         logo.addEventListener('mouseenter', () => {
             isHovering = true;
-            startCharBounce();
+            startWave();
         });
 
         logo.addEventListener('mouseleave', () => {
             isHovering = false;
-            stopCharBounce();
+            if (waveInterval) {
+                clearInterval(waveInterval);
+                waveInterval = null;
+            }
+            chars.forEach(c => c.classList.remove('wave'));
         });
 
-        // Add some interactive effects
-        const binaryTrail = '01000001 01000111 01001001';
-        let trailIndex = 0;
-        let lastMouseTime = 0;
+        // ═══════════════════════════════════════
+        // Logo characters: random color cycling
+        // ═══════════════════════════════════════
+        function randomizeCharColors() {
+            chars.forEach(c => {
+                c.style.color = randomColor();
+            });
+        }
+
+        // Initial random colors after reveal animation completes for all chars
+        // Last char: delay 0.74s + animation 0.7s = 1.44s, wait until 1.6s
+        setTimeout(() => {
+            // Mark all chars as revealed so wave animation won't reset opacity
+            chars.forEach(c => c.classList.add('revealed'));
+            randomizeCharColors();
+        }, 1600);
+
+        // Smooth color cycling — one char at a time
+        setInterval(() => {
+            const idx = Math.floor(Math.random() * chars.length);
+            chars[idx].style.color = randomColor();
+        }, 900);
+
+        // ═══════════════════════════════════════
+        // Mouse trail — floating token words
+        // ═══════════════════════════════════════
+        let lastTrailTime = 0;
 
         document.addEventListener('mousemove', (e) => {
-            const currentTime = Date.now();
+            const now = Date.now();
+            if (now - lastTrailTime < 70) return;
+            lastTrailTime = now;
 
-            // Only create trail if mouse is moving fast enough
-            if (currentTime - lastMouseTime > 30) {
-                const char = binaryTrail[trailIndex % binaryTrail.length];
+            const word = randomCharFromLang(randomLang());
+            const trail = document.createElement('div');
+            trail.className = 'cursor-trail';
+            trail.textContent = word;
 
-                // Skip spaces for visual clarity
-                if (char !== ' ') {
-                    const cursor = document.createElement('div');
-                    cursor.style.position = 'fixed';
-                    cursor.style.left = e.clientX + 'px';
-                    cursor.style.top = e.clientY + 'px';
-                    cursor.style.color = '#00ff00';
-                    cursor.style.fontSize = '14px';
-                    cursor.style.fontFamily = 'Courier New, monospace';
-                    cursor.style.pointerEvents = 'none';
-                    cursor.style.zIndex = '15';
-                    cursor.style.textShadow = '0 0 5px #00ff00';
-                    cursor.style.userSelect = 'none';
-                    cursor.textContent = char;
+            // Slight random offset from cursor
+            const offsetX = (Math.random() - 0.5) * 16;
+            const offsetY = (Math.random() - 0.5) * 8;
+            trail.style.left = (e.clientX + offsetX) + 'px';
+            trail.style.top = (e.clientY + offsetY) + 'px';
+            trail.style.color = randomColor();
+            trail.style.opacity = '0.55';
 
-                    document.body.appendChild(cursor);
+            const rotation = (Math.random() - 0.5) * 30;
+            const scale = 0.8 + Math.random() * 0.5;
+            trail.style.transform = `rotate(${rotation}deg) scale(${scale})`;
 
-                    setTimeout(() => {
-                        cursor.style.opacity = '0';
-                        cursor.style.transform = 'scale(1.5)';
-                        cursor.style.transition = 'all 1s ease';
-                        setTimeout(() => {
-                            if (cursor.parentNode) {
-                                cursor.parentNode.removeChild(cursor);
-                            }
-                        }, 1000);
-                    }, 100);
-                }
+            document.body.appendChild(trail);
 
-                trailIndex++;
-                lastMouseTime = currentTime;
-            }
+            requestAnimationFrame(() => {
+                trail.style.transition = 'all 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+                trail.style.opacity = '0';
+                const driftX = (Math.random() - 0.5) * 30;
+                trail.style.transform = `translateY(-35px) translateX(${driftX}px) rotate(${rotation + 15}deg) scale(0.5)`;
+            });
+
+            setTimeout(() => {
+                if (trail.parentNode) trail.parentNode.removeChild(trail);
+            }, 1500);
         });
-
-        const sloganElement = document.querySelector('.tagline');
-        const slogans = [
-            "Create & Connect",
-            "构建 & 连接",
-            "창조 & 연결",
-            "Créer & Connecter",
-            "Создать & Подключить",
-            "作成 & 接続",
-            "Erstellen & Verbinden",
-            "Crear & Conectar"
-        ];
     </script>
 </body>
 </html>
